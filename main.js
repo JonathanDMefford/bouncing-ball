@@ -13,20 +13,44 @@ function random(min,max) {
   return num;
 }
 
-function Ball(x, y, velX, velY, color, size) {
+function Shape(x, y, velX, velY, exists) {
     this.x = x;
     this.y = y;
     this.velX = velX;
     this.velY = velY;
-    this.color = color;
-    this.size = size;
+    this.exists = exists;
   }
+
+  
+  function Ball(x, y, velX, velY, exists, color, size) {
+      Shape.call(this, x, y, velX, velY, exists);
+      this.color = color;
+      this.size = size;
+    }
+
+  function EvilCircle(x, y, velX, velY, exists) {
+      Shape.call(this, x, y, 20, 20, exists);
+      this.color = 'white';
+      this.size = 10;
+    }
+
+  EvilCircle.prototype = Object.create(Shape.prototype);
+    
+  Ball.prototype = Object.create(Shape.prototype);
 
   Ball.prototype.draw = function() {
     ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
     ctx.fill();
+  }
+
+  EvilCircle.prototype.draw = function() {
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = this.color;
+    ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+    ctx.stroke();
   }
 
   Ball.prototype.update = function() {
@@ -48,6 +72,24 @@ function Ball(x, y, velX, velY, color, size) {
   
     this.x += this.velX;
     this.y += this.velY;
+  }
+
+  EvilCircle.prototype.checkBounds = function() {
+    if ((this.x + this.size) >= width) {
+      this.velX = -(this.velX);
+    }
+  
+    if ((this.x - this.size) <= 0) {
+      this.velX = -(this.velX);
+    }
+  
+    if ((this.y + this.size) >= height) {
+      this.velY = -(this.velY);
+    }
+  
+    if ((this.y - this.size) <= 0) {
+      this.velY = -(this.velY);
+    }
   }
 
   Ball.prototype.collisionDetect = function() {
@@ -75,6 +117,7 @@ while (balls.length < 25) {
     random(0 + size,height - size),
     random(-7,7),
     random(-7,7),
+    exists = true,
     'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
     size
   );
