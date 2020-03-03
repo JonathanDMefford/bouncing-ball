@@ -29,7 +29,7 @@ function Ball(x, y, velX, velY, exists, color, size) {
 }
 
 function EvilCircle(x, y, velX, velY, exists) {
-    Shape.call(this, x, y, 20, 20, exists);
+    Shape.call(this, x, y, 30, 30, exists);
     this.color = 'white';
     this.size = 10;
 }
@@ -130,16 +130,17 @@ Ball.prototype.collisionDetect = function () {
 
             if (distance < this.size + balls[j].size) {
                 balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) + ')';
+                balls[j].size = Math.random() * (20 - 10) + 10;
             }
         }
     }
 }
 
 let balls = [];
-let Circle = new EvilCircle(width / 2, height / 2, 20, 20, true, 'white', 10);
+let Circle = new EvilCircle(width / 2, height / 2, 30, 30, true, 'white', 10);
 Circle.setControls();
 
-while (balls.length < 25) {
+while (balls.length < 40) {
     let size = random(10, 20);
     let ball = new Ball(
         // ball position always drawn at least one ball width
@@ -151,28 +152,32 @@ while (balls.length < 25) {
         exists = true,
         'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) + ')',
         size
-    );
-
-    balls.push(ball);
-}
-
-function loop() {
+        );
+        balls.push(ball);
+    }
+    
+    function loop() {
+    let count = balls.length;
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
-
+    
     for (let i = 0; i < balls.length; i++) {
         if (balls[i].exists) {
             balls[i].draw();
         }
+        if (balls[i].exists == false) {
+            count -= 1;
+        }
         balls[i].update();
         balls[i].collisionDetect();
-
+        
     }
     Circle.draw();
     Circle.checkBounds();
     Circle.collisionDetect();
-
+    
     requestAnimationFrame(loop);
+    document.getElementById('count').innerHTML = 'Ball Count:' + ' ' + count;
 }
 
 loop();
