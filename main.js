@@ -29,7 +29,7 @@ function Ball(x, y, velX, velY, exists, color, size) {
 }
 
 function EvilCircle(x, y, velX, velY, exists) {
-    Shape.call(this, x, y, 30, 30, exists);
+    Shape.call(this, x, y, 15, 15, exists);
     this.color = 'white';
     this.size = 10;
 }
@@ -95,15 +95,10 @@ EvilCircle.prototype.checkBounds = function () {
 EvilCircle.prototype.setControls = function () {
     let _this = this;
     window.onkeydown = function (e) {
-        if (e.key === 'a') {
-            _this.x -= _this.velX;
-        } else if (e.key === 'd') {
-            _this.x += _this.velX;
-        } else if (e.key === 'w') {
-            _this.y -= _this.velY;
-        } else if (e.key === 's') {
-            _this.y += _this.velY;
-        }
+        if (e.key === 'a') {_this.x -= _this.velX; }
+        if (e.key === 'd') {_this.x += _this.velX; }
+        if (e.key === 'w') {_this.y -= _this.velY; }
+        if (e.key === 's') {_this.y += _this.velY; }
     }
 }
 
@@ -130,17 +125,17 @@ Ball.prototype.collisionDetect = function () {
 
             if (distance < this.size + balls[j].size) {
                 balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) + ')';
-                balls[j].size = Math.random() * (20 - 10) + 10;
+                balls[j].size = Math.random() * (25 - 10) + 10;
             }
         }
     }
 }
 
 let balls = [];
-let Circle = new EvilCircle(width / 2, height / 2, 30, 30, true, 'white', 10);
+let Circle = new EvilCircle(width / 2, height / 2, 15, 15, true, 'white', 10);
 Circle.setControls();
 
-while (balls.length < 40) {
+while (balls.length < 30) {
     let size = random(10, 20);
     let ball = new Ball(
         // ball position always drawn at least one ball width
